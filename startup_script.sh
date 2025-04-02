@@ -36,8 +36,9 @@ sudo apt-get install -y nodejs
 
 # Install Helm (latest stable version)
 echo "Installing Helm..."
-curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
-sudo add-apt-repository "deb https://baltocdn.com/helm/stable/debian/ all main"
+sudo curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+sudo chmod 700 get_helm.sh
+sudo ./get_helm.sh
 sudo apt-get update
 sudo apt-get install -y helm
 
