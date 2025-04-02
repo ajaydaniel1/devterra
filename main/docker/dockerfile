@@ -1,0 +1,50 @@
+# Use an official Ubuntu as the base image
+FROM ubuntu:20.04
+
+# Set non-interactive mode to avoid UI prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install necessary packages
+RUN apt-get update -y && apt-get upgrade -y \
+    && apt-get install -y \
+    curl \
+    wget \
+    nano \
+    gnupg2 \
+    lsb-release \
+    ca-certificates \
+    software-properties-common \
+    apt-transport-https \
+    sudo \
+    && apt-get clean
+
+# Install Docker (latest version)
+RUN curl -fsSL https://get.docker.com -o get-docker.sh \
+    && sh get-docker.sh \
+    && sudo usermod -aG docker root \
+    && rm get-docker.sh
+
+# Install K3s (lightweight Kubernetes)
+RUN curl -sfL https://get.k3s.io | sh - \
+    && sudo systemctl enable k3s \
+    && sudo systemctl start k3s
+
+# Install Node.js (latest stable version)
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash - \
+    && sudo apt-get install -y nodejs
+
+# Install Helm (latest stable version)
+RUN curl https://baltocdn.com/helm/signing.asc | sudo apt-key add - \
+    && sudo add-apt-repository "deb https://baltocdn.com/helm/stable/debian/ all main" \
+    && sudo apt-get update \
+    && sudo apt-get install -y helm
+
+# Verify installations
+RUN docker --version \
+    && k3s --version \
+    && node -v \
+    && npm -v \
+    && helm version
+
+# Default command (this will run when the container starts)
+CMD ["bash"]
