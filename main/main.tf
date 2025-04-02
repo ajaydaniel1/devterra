@@ -8,25 +8,30 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "eu-north-1"
 }
 
 resource "aws_instance" "example" {
-  ami           = "ami-011899242bb902164" # Ubuntu 20.04 LTS // us-east-1
-  instance_type = "t2.micro"
+  ami           = "ami-0c1ac8a41498c1a9c" # Ubuntu 20.04 LTS // eu-north-1
+  instance_type = "t3.micro"
+  security_groups = "sgr-0044aebe483f48c05"
   
   # User data to download the startup script from GitHub
-  user_data = <<-EOF
-    #!/bin/bash
+user_data = <<-EOF
+  #!/bin/bash
+  
+  # Download the startup script from GitHub and save it to /tmp/startup_script.sh
+  curl -o /tmp/startup_script.sh https://raw.githubusercontent.com/ajaydaniel1/devterra/refs/heads/dev/startup_script.sh
 
-    # Download the startup script from GitHub
-    curl -o https://raw.githubusercontent.com/ajaydaniel1/devterra/refs/heads/dev/startup_script.sh
-    chmod +x /tmp/startup_script.sh
-    /tmp/startup_script.sh
-  EOF
+  # Make the downloaded script executable
+  chmod +x /tmp/startup_script.sh
+
+  # Execute the script
+  /tmp/startup_script.sh
+EOF
+
 
   tags = {
     Name = "TerraformInstance"
   }
 }
-
