@@ -14,12 +14,11 @@ provider "aws" {
 resource "aws_instance" "example" {
   ami           = "ami-0c1ac8a41498c1a9c" # Ubuntu 20.04 LTS // eu-north-1
   instance_type = "t3.micro"
-  security_groups = "sgr-0044aebe483f48c05"
   
   # User data to download the startup script from GitHub
 user_data = <<-EOF
   #!/bin/bash
-  
+
   # Download the startup script from GitHub and save it to /tmp/startup_script.sh
   curl -o /tmp/startup_script.sh https://raw.githubusercontent.com/ajaydaniel1/devterra/refs/heads/dev/startup_script.sh
 
