@@ -29,4 +29,4 @@ resource "aws_instance" "example" {
     Name = "TerraformInstance"
   }
 }
-}
+
